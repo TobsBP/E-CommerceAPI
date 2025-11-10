@@ -9,6 +9,8 @@ import {
 	type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 
+import { shirtRoute } from '@/routes/shirt.routes'
+
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
@@ -33,6 +35,8 @@ app.register(fastifySwagger, {
 app.register(ScalarApiReference, {
 	routePrefix: '/docs',
 })
+
+app.register(shirtRoute)
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
 	console.log('HTTP server running on http://localhost:3333!')
