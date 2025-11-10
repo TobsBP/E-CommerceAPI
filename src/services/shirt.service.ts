@@ -1,10 +1,10 @@
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
 import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
-import { getshirts, createShirt } from '@/repositories/shirt.repository'
+import { getShirts, createShirt } from '@/repositories/shirt.repository'
 
 export class ShirtService {
 	async findShirt(name: string) {
-		const shirt = await getshirts(name)
+		const shirt = await getShirts(name)
 		if (!shirt) return null
 
 		const parsed = ShirtSchema.safeParse(shirt)
