@@ -4,10 +4,7 @@ import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
 
 const shirtService = new ShirtService()
 
-export async function getShirtController(
-	request: FastifyRequest,
-	reply: FastifyReply,
-) {
+export async function getShirtController(request: FastifyRequest, reply: FastifyReply,) {
 	try {
 		const { name } = request.params as ShirtParams
 		const shirt = await shirtService.findShirt(name)
@@ -21,10 +18,7 @@ export async function getShirtController(
 	}
 }
 
-export async function createShirtController(
-	request: FastifyRequest<{ Body: ShirtParams }>,
-	reply: FastifyReply,
-) {
+export async function createShirtController(request: FastifyRequest<{ Body: ShirtParams }>, reply: FastifyReply,) {
 	try {
 		const response = await shirtService.addShirt(request.body)
 		reply.status(201).send(response)
