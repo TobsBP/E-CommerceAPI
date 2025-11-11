@@ -1,10 +1,11 @@
 import {
 	getShirtController,
 	createShirtController,
+  updateShirtController,
 } from '../controllers/shirt.controller'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { ShirtSchema, UpdateShirtSchema } from '@/types/Schemas/shirt.schema'
 import { authenticate } from '@/middleware/auth'
 
 export async function shirtRoute(server: FastifyInstance) {
@@ -36,5 +37,20 @@ export async function shirtRoute(server: FastifyInstance) {
 			},
 		},
 		createShirtController,
+	)
+	
+	server.put(
+	  '/shirt/:name',
+		{
+			schema: {
+				body: UpdateShirtSchema,
+				response: {
+					201: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
+				},
+			},
+		},
+		updateShirtController,
 	)
 }

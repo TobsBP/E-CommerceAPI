@@ -27,3 +27,14 @@ export async function createShirtController(request: FastifyRequest<{ Body: Shir
 		reply.status(500).send({ message: (error as Error).message })
 	}
 }
+
+export async function updateShirtController(request: FastifyRequest<{ Body: ShirtParams }>, reply: FastifyReply,) {
+	try {
+		const response = await shirtService.editShirt(request.body)
+		reply.status(201).send(response)
+	} catch (error) {
+		request.log.error(error)
+		reply.status(500).send({ message: (error as Error).message })
+	}
+}
+

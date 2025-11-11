@@ -12,3 +12,14 @@ export const createShirt = async (shirt: Shirt) => {
 
 	return await db_shirts.insertOne(shirt)
 }
+
+export const updateShirt = async (shirt: Shirt) => {
+  const db_shirts = await shirtCollection();
+
+  const { name, ...rest } = shirt;
+  
+  return await db_shirts.updateOne(
+    { name: name },  
+    { $set: rest }        
+  );
+};
