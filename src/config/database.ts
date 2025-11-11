@@ -13,7 +13,7 @@ export async function shirtCollection() {
 			const db = client.db('Items')
 			db_shirts = db.collection('t_shirts')
 		} catch (error) {
-			console.error('Erro ao conectar no MongoDB:', error)
+			console.error('Erro in conecttion with MongoDB:', error)
 			throw error
 		}
 	}

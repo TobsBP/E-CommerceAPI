@@ -6,17 +6,18 @@ import {
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { authenticate } from '@/middleware/auth'
 
 export async function shirtRoute(server: FastifyInstance) {
 	server.get(
 		'/shirt/:name',
 		{
+			preHandler: authenticate,
 			schema: {
 				response: {
 					200: ShirtSchema,
-					500: z.object({
-						message: z.string(),
-					}),
+					404: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
 				},
 				tags: ['Shirt'],
 			},

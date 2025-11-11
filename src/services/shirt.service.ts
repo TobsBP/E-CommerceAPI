@@ -8,14 +8,14 @@ export class ShirtService {
 		if (!shirt) return null
 
 		const parsed = ShirtSchema.safeParse(shirt)
-		if (!parsed.success) throw new Error('Dados inválidos no banco')
+		if (!parsed.success) throw new Error('Invalid data in the database.')
 
 		return parsed.data
 	}
 
 	async addShirt(shirtData: ShirtParams) {
 		const parsed = ShirtSchema.safeParse(shirtData)
-		if (!parsed.success) throw new Error('Dados inválidos enviados')
+		if (!parsed.success) throw new Error('Invalid data sent.')
 
 		await createShirt(parsed.data)
 		return { message: 'Shirt added!!' }

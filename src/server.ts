@@ -1,6 +1,7 @@
 import { fastifyCors } from '@fastify/cors'
 import { fastifySwagger } from '@fastify/swagger'
 import ScalarApiReference from '@scalar/fastify-api-reference'
+import { fastifyJwt } from '@fastify/jwt'
 import { fastify } from 'fastify'
 import {
 	jsonSchemaTransform,
@@ -17,8 +18,15 @@ app.setSerializerCompiler(serializerCompiler)
 
 app.register(fastifyCors, {
 	origin: true,
-	methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-	// credentials: true
+	methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+})
+
+if (!process.env.JWT_SECRET) {
+	throw new Error('JWT_SECRET is not defined in .env')
+}
+
+app.register(fastifyJwt, {
+	secret: process.env.JWT_SECRET,
 })
 
 app.register(fastifySwagger, {
