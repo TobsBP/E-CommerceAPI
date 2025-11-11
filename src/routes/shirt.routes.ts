@@ -45,6 +45,7 @@ export async function shirtRoute(server: FastifyInstance) {
 	server.put(
 		'/shirt/:name',
 		{
+			preHandler: authenticate,
 			schema: {
 				body: UpdateShirtSchema,
 				response: {
