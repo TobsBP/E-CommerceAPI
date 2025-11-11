@@ -4,7 +4,7 @@ import type { Shirt } from '@/types/Schemas/shirt.schema'
 export const getShirts = async (name: string) => {
 	const db_shirts = await shirtCollection()
 
-	return await db_shirts.findOne({ nome: name })
+	return await db_shirts.findOne({ name: name })
 }
 
 export const createShirt = async (shirt: Shirt) => {
@@ -14,12 +14,9 @@ export const createShirt = async (shirt: Shirt) => {
 }
 
 export const updateShirt = async (shirt: Shirt) => {
-  const db_shirts = await shirtCollection();
+	const db_shirts = await shirtCollection()
 
-  const { name, ...rest } = shirt;
-  
-  return await db_shirts.updateOne(
-    { name: name },  
-    { $set: rest }        
-  );
-};
+	const { name, ...rest } = shirt
+
+	return await db_shirts.updateOne({ name: name }, { $set: rest })
+}
