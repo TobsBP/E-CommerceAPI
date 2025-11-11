@@ -13,4 +13,4 @@ export const ShirtSchema = z.object({
 })
 
 export type Shirt = z.infer<typeof ShirtSchema>
-export const UpdateShirtSchema = ShirtSchema.partial();
+export const UpdateShirtSchema = ShirtSchema.omit({ name: true }).partial()

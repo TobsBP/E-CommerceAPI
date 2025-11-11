@@ -4,23 +4,33 @@ import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
 
 const shirtService = new ShirtService()
 
-export async function getShirtController(request: FastifyRequest, reply: FastifyReply,) {
+export async function getShirtController(
+	request: FastifyRequest,
+	reply: FastifyReply,
+) {
 	try {
 		const { name } = request.params as ShirtParams
+
 		const shirt = await shirtService.findShirt(name)
+
 		if (!shirt) {
 			return reply.status(404).send({ message: 'Shirt not found' })
 		}
 		return reply.status(200).send(shirt)
 	} catch (error) {
 		request.log.error(error)
-		return reply.status(500).send({ message: 'Internal error while searching for shirt.' })
+		return reply
+			.status(500)
+			.send({ message: 'Internal error while searching for shirt.' })
 	}
 }
 
-export async function createShirtController(request: FastifyRequest<{ Body: ShirtParams }>, reply: FastifyReply,) {
+export async function createShirtController(
+	request: FastifyRequest,
+	reply: FastifyReply,
+) {
 	try {
-		const response = await shirtService.addShirt(request.body)
+		const response = await shirtService.addShirt(request.body as ShirtParams)
 		reply.status(201).send(response)
 	} catch (error) {
 		request.log.error(error)
@@ -28,13 +38,15 @@ export async function createShirtController(request: FastifyRequest<{ Body: Shir
 	}
 }
 
-export async function updateShirtController(request: FastifyRequest<{ Body: ShirtParams }>, reply: FastifyReply,) {
+export async function updateShirtController(
+	request: FastifyRequest,
+	reply: FastifyReply,
+) {
 	try {
-		const response = await shirtService.editShirt(request.body)
+		const response = await shirtService.editShirt(request.body as ShirtParams)
 		reply.status(201).send(response)
 	} catch (error) {
 		request.log.error(error)
 		reply.status(500).send({ message: (error as Error).message })
 	}
 }
-

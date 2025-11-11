@@ -1,6 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
-export async function authenticate(request: FastifyRequest, reply: FastifyReply,) {
+export async function authenticate(
+	request: FastifyRequest,
+	reply: FastifyReply,
+) {
 	try {
 		await request.jwtVerify()
 	} catch (err) {
