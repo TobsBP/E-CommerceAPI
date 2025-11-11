@@ -2,9 +2,10 @@ import type { FastifyInstance } from 'fastify'
 import { authenticate } from '@/middleware/auth'
 import {
 	addItemController,
+	getItemController,
 	removeItemController,
 } from '@/controllers/cart.controller'
-import { AddToCartSchema } from '@/types/Schemas/cart.schema'
+import { AddToCartSchema, CartSchema } from '@/types/Schemas/cart.schema'
 import { z } from 'zod'
 
 export async function cartRoute(server: FastifyInstance) {
@@ -15,7 +16,7 @@ export async function cartRoute(server: FastifyInstance) {
 			schema: {
 				body: AddToCartSchema,
 				response: {
-					200: z.object({ message: z.unknown() }),
+					200: CartSchema,
 					404: z.object({ message: z.unknown() }),
 					500: z.object({ message: z.unknown() }),
 				},
@@ -32,7 +33,7 @@ export async function cartRoute(server: FastifyInstance) {
 			schema: {
 				body: AddToCartSchema,
 				response: {
-					200: z.object({ message: z.unknown() }),
+					200: z.object({ message: z.boolean() }),
 					404: z.object({ message: z.unknown() }),
 					500: z.object({ message: z.unknown() }),
 				},
@@ -40,5 +41,21 @@ export async function cartRoute(server: FastifyInstance) {
 			},
 		},
 		removeItemController,
+	)
+
+	server.get(
+		'/cart',
+		{
+			preHandler: authenticate,
+			schema: {
+				response: {
+					200: CartSchema,
+					404: z.object({ message: z.unknown() }),
+					500: z.object({ message: z.unknown() }),
+				},
+				tags: ['Cart'],
+			},
+		},
+		getItemController,
 	)
 }

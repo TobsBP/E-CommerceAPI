@@ -22,5 +22,18 @@ export const removeItemController = async (
 	const { userId } = request.user as UserParams
 	const newItem = request.body as AddToCart
 	const result = await cartService.removeItem(userId, newItem)
-	return reply.status(200).send(result)
+
+	return reply.status(200).send({ message: result })
 }
+
+export const getItemController = async (
+	request: FastifyRequest,
+	reply: FastifyReply,
+) => {
+	const { userId } = request.user as UserParams
+	const result = await cartService.getUserCart(userId)
+
+	console.log(result)
+
+	return reply.status(200).send(result)
+}	

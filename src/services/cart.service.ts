@@ -57,6 +57,6 @@ export class CartService {
 		if (!parsed.success) throw new Error('Invalid cart data')
 
 		await saveCart(parsed.data)
-		return parsed.data
+		return true
 	}
 }

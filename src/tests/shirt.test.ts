@@ -1,5 +1,5 @@
 import { expect, it, vi, beforeEach } from 'vitest'
-import { createShirt, getShirts } from '@/repositories/shirt.repository'
+import { createShirt, getShirtByName } from '@/repositories/shirt.repository'
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
 import { describe } from 'node:test'
 
@@ -55,7 +55,7 @@ describe('Success cases', () => {
 
 		mockDb.findOne.mockResolvedValue(shirtFromDb)
 
-		const result = await getShirts(shirtName)
+		const result = await getShirtByName(shirtName)
 
 		expect(mockDb.findOne).toHaveBeenCalledOnce()
 		expect(result).toEqual(shirtFromDb)
