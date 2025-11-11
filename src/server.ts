@@ -1,6 +1,7 @@
 import { fastifyCors } from '@fastify/cors'
 import { fastifySwagger } from '@fastify/swagger'
 import ScalarApiReference from '@scalar/fastify-api-reference'
+import { fastifyJwt } from '@fastify/jwt'
 import { fastify } from 'fastify'
 import {
 	jsonSchemaTransform,
@@ -10,6 +11,7 @@ import {
 } from 'fastify-type-provider-zod'
 
 import { shirtRoute } from '@/routes/shirt.routes'
+import { authRoute } from '@/routes/auth.routes'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setValidatorCompiler(validatorCompiler)
@@ -18,7 +20,14 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(fastifyCors, {
 	origin: true,
 	methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-	// credentials: true
+})
+
+if (!process.env.JWT_SECRET) {
+	throw new Error('JWT_SECRET is not defined in .env')
+}
+
+app.register(fastifyJwt, {
+	secret: process.env.JWT_SECRET,
 })
 
 app.register(fastifySwagger, {
@@ -37,6 +46,7 @@ app.register(ScalarApiReference, {
 })
 
 app.register(shirtRoute)
+app.register(authRoute)
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
 	console.log('HTTP server running on http://localhost:3333!')

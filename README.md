@@ -1,4 +1,3 @@
-```markdown
 # 🛒 E-Commerce API
 
 Backend em **Fastify + TypeScript**, projetado para um sistema de **e-commerce moderno**.  
@@ -19,29 +18,27 @@ Inclui validação de dados com **Zod**, documentação automática com **Swagge
 ## 🧱 Estrutura do Projeto
 
 ```
-
 src/
 ├── server.ts               # Ponto de entrada do servidor
 ├── routes/                 # Definições das rotas
-│    ├── products.ts        # Rotas de produtos
-│    ├── users.ts           # Rotas de usuários
-│    ├── orders.ts          # Rotas de pedidos
-│    └── auth.ts            # Autenticação e login
+│   ├── products.ts         # Rotas de produtos
+│   ├── users.ts            # Rotas de usuários
+│   ├── orders.ts           # Rotas de pedidos
+│   └── auth.ts             # Autenticação e login
 ├── controllers/            # Lógica das rotas
 ├── schemas/                # Schemas Zod para validação
 ├── services/               # Regras de negócio
 ├── config/                 # Conexão com banco, CORS, etc.
 └── utils/                  # Funções auxiliares
-.env                         # Variáveis de ambiente
-
-````
+.env                        # Variáveis de ambiente
+```
 
 ---
 
 ## 🧩 Scripts
 
 | Comando | Descrição |
-|----------|------------|
+|---------|-----------|
 | `npm run dev` | Executa o servidor em modo desenvolvimento |
 | `npm run start` | Executa o servidor compilado (`dist/server.js`) |
 | `npm run format` | Formata o código com o Biome |
@@ -53,16 +50,14 @@ src/
 1. **Instalar dependências**
    ```bash
    npm install
-````
+   ```
 
 2. **Rodar em desenvolvimento**
-
    ```bash
    npm run dev
    ```
 
 3. **Acessar documentação Swagger**
-
    ```
    http://localhost:3333/docs
    ```
@@ -71,20 +66,20 @@ src/
 
 ## 📦 Funcionalidades
 
-* 🔐 Autenticação com JWT
-* 👤 Gerenciamento de usuários
-* 🛍️ CRUD de produtos
-* 🧾 Criação e listagem de pedidos
-* 💳 Integração futura com gateway de pagamento
-* 📄 Documentação interativa com Swagger
+- 🔐 Autenticação com JWT
+- 👤 Gerenciamento de usuários
+- 🛍️ CRUD de produtos
+- 🧾 Criação e listagem de pedidos
+- 💳 Integração futura com gateway de pagamento
+- 📄 Documentação interativa com Swagger
 
 ---
 
 ## 🧪 Boas práticas
 
-* **Zod** garante validação de todas as entradas.
-* **Biome** mantém o código limpo e padronizado.
-* Estrutura modular para facilitar manutenção e escalabilidade.
+- **Zod** garante validação de todas as entradas
+- **Biome** mantém o código limpo e padronizado
+- Estrutura modular para facilitar manutenção e escalabilidade
 
 ---
 
@@ -98,3 +93,7 @@ npm start
 ```
 
 ---
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT.

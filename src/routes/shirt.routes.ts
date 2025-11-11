@@ -1,22 +1,25 @@
 import {
 	getShirtController,
 	createShirtController,
+	updateShirtController,
 } from '../controllers/shirt.controller'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { ShirtSchema, UpdateShirtSchema } from '@/types/Schemas/shirt.schema'
+import { authenticate } from '@/middleware/auth'
 
 export async function shirtRoute(server: FastifyInstance) {
 	server.get(
 		'/shirt/:name',
 		{
+			preHandler: authenticate,
 			schema: {
 				response: {
 					200: ShirtSchema,
-					500: z.object({
-						message: z.string(),
-					}),
+					404: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
 				},
+				tags: ['Shirt'],
 			},
 		},
 		getShirtController,
@@ -25,6 +28,7 @@ export async function shirtRoute(server: FastifyInstance) {
 	server.post(
 		'/shirt',
 		{
+			preHandler: authenticate,
 			schema: {
 				body: ShirtSchema,
 				response: {
@@ -32,8 +36,26 @@ export async function shirtRoute(server: FastifyInstance) {
 					400: z.object({ message: z.string() }),
 					500: z.object({ message: z.string() }),
 				},
+				tags: ['Shirt'],
 			},
 		},
 		createShirtController,
+	)
+
+	server.put(
+		'/shirt/:name',
+		{
+			preHandler: authenticate,
+			schema: {
+				body: UpdateShirtSchema,
+				response: {
+					201: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
+				},
+				tags: ['Shirt'],
+			},
+		},
+		updateShirtController,
 	)
 }
