@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import type { FastifyReply } from 'fastify'
 import type { UserParams } from '@/types/Interfaces/IUserParams'
-import { getUserByEmail, createUser } from '@/repositories/user.repositories'
+import { getUserByEmail, createUser } from '@/repositories/user.repository'
 
 export class AuthService {
 	async register(userData: UserParams) {

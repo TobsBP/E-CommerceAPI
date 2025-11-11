@@ -1,10 +1,17 @@
 import { shirtCollection } from '@/config/database'
 import type { Shirt } from '@/types/Schemas/shirt.schema'
+import { ObjectId } from 'mongodb'
 
-export const getShirts = async (name: string) => {
+export const getShirtByName = async (name: string) => {
 	const db_shirts = await shirtCollection()
 
 	return await db_shirts.findOne({ name: name })
+}
+
+export const getShirtById = async (shirtId: string) => {
+	const db_shirts = await shirtCollection()
+
+	return await db_shirts.findOne({ _id: new ObjectId(shirtId) })
 }
 
 export const createShirt = async (shirt: Shirt) => {
