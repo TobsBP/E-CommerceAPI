@@ -1,6 +1,7 @@
 import { expect, it, vi, beforeEach } from 'vitest'
 import { createShirt, getShirts } from '@/repositories/shirt.repository'
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { describe } from 'node:test'
 
 const mockDb = {
 	insertOne: vi.fn(),
@@ -15,7 +16,8 @@ beforeEach(() => {
 	vi.clearAllMocks()
 })
 
-it('should create a new shirt', async () => {
+describe('Success cases', () => {
+  it('should create a new shirt', async () => {
 	mockDb.insertOne.mockResolvedValue({ acknowledged: true })
 
 	const shirtData = {
@@ -35,9 +37,9 @@ it('should create a new shirt', async () => {
 
 	expect(mockDb.insertOne).toHaveBeenCalledOnce()
 	expect(result).toHaveProperty('acknowledged', true)
-})
+  })
 
-it('should return a shirt by name', async () => {
+  it('should return a shirt by name', async () => {
 	const shirtName = 'T-Shirt X'
 	const shirtFromDb = {
 		name: shirtName,
@@ -57,4 +59,11 @@ it('should return a shirt by name', async () => {
 
 	expect(mockDb.findOne).toHaveBeenCalledOnce()
 	expect(result).toEqual(shirtFromDb)
+  })
+})
+
+describe('Fail cases', () => {
+  // it('Shout trhow an error', async () => {
+    
+  // })
 })
