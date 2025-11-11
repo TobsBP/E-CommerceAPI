@@ -1,6 +1,6 @@
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
 import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
-import { getShirts, createShirt } from '@/repositories/shirt.repository'
+import { getShirts, createShirt, updateShirt } from '@/repositories/shirt.repository'
 
 export class ShirtService {
 	async findShirt(name: string) {
@@ -14,10 +14,18 @@ export class ShirtService {
 	}
 
 	async addShirt(shirtData: ShirtParams) {
-	  const parsed = ShirtSchema.safeParse(shirtData)
+		const parsed = ShirtSchema.safeParse(shirtData)
 		if (!parsed.success) throw new Error('Dados inválidos enviados')
 
 		await createShirt(parsed.data)
 		return { message: 'Shirt added!!' }
+	}
+	
+	async editShirt(shirtData: ShirtParams) {
+	  const parsed = ShirtSchema.safeParse(shirtData)
+		if (!parsed.success) throw new Error('Dados inválidos enviados')
+	
+		await this.updateShirt(parsed.data, parsed.data.name)
+		return { message: 'Shirt edited!!' }
 	}
 }

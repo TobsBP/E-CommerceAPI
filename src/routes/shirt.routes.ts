@@ -1,6 +1,7 @@
 import {
 	getShirtController,
 	createShirtController,
+	editShirtController,
 } from '../controllers/shirt.controller'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
@@ -17,6 +18,7 @@ export async function shirtRoute(server: FastifyInstance) {
 						message: z.string(),
 					}),
 				},
+				tags: ['Shirt'],
 			},
 		},
 		getShirtController,
@@ -32,8 +34,25 @@ export async function shirtRoute(server: FastifyInstance) {
 					400: z.object({ message: z.string() }),
 					500: z.object({ message: z.string() }),
 				},
+				tags: ['Shirt'],
 			},
 		},
 		createShirtController,
+	)
+
+	server.put(
+	'/shirt',	
+	{
+			schema: {
+				body: ShirtSchema,
+				response: {
+					201: z.object({ message: z.string() }),
+					400: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
+				},
+				tags: ['Shirt'],
+			},
+		},
+		editShirtController,
 	)
 }
