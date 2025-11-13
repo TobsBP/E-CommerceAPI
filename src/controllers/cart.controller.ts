@@ -36,4 +36,4 @@ export const getItemController = async (
 	console.log(result)
 
 	return reply.status(200).send(result)
-}	
+}
