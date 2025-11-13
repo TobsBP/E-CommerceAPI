@@ -69,7 +69,9 @@ describe('shirt.repository', () => {
 			mockDb.findOne.mockResolvedValue(null)
 			const result = await getShirtByName('non-existent-shirt')
 
-			expect(mockDb.findOne).toHaveBeenCalledWith({ name: 'non-existent-shirt' })
+			expect(mockDb.findOne).toHaveBeenCalledWith({
+				name: 'non-existent-shirt',
+			})
 			expect(result).toBeNull()
 		})
 	})
