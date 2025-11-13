@@ -1,11 +1,17 @@
-import { expect, it, vi, beforeEach } from 'vitest'
-import { createShirt, getShirtByName } from '@/repositories/shirt.repository'
+import { expect, it, vi, beforeEach, describe } from 'vitest'
+import {
+	createShirt,
+	getShirtByName,
+	getShirtById,
+	updateShirt,
+} from '@/repositories/shirt.repository'
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
-import { describe } from 'node:test'
+import { ObjectId } from 'mongodb'
 
 const mockDb = {
 	insertOne: vi.fn(),
 	findOne: vi.fn(),
+	updateOne: vi.fn(),
 }
 
 vi.mock('@/config/database', () => ({
@@ -16,53 +22,98 @@ beforeEach(() => {
 	vi.clearAllMocks()
 })
 
-describe('Success cases', () => {
-	it('should create a new shirt', async () => {
-		mockDb.insertOne.mockResolvedValue({ acknowledged: true })
+const shirtData = {
+	name: 'T-Shirt X',
+	brand: 'Brand Y',
+	size: 'M',
+	price: 49.99,
+	stock: 10,
+	color: 'Black',
+	category: 'Casual',
+	material: 'Cotton',
+	gender: 'Unisex',
+}
 
-		const shirtData = {
-			name: 'T-Shirt X',
-			brand: 'Brand Y',
-			size: 'M',
-			price: 49.99,
-			stock: 10,
-			color: 'Black',
-			category: 'Casual',
-			material: 'Cotton',
-			gender: 'Unisex',
-		}
+describe('shirt.repository', () => {
+	describe('createShirt', () => {
+		it('should create a new shirt successfully', async () => {
+			mockDb.insertOne.mockResolvedValue({
+				acknowledged: true,
+				insertedId: new ObjectId(),
+			})
+			const parsed = ShirtSchema.parse(shirtData)
+			const result = await createShirt(parsed)
 
-		const parsed = ShirtSchema.parse(shirtData)
-		const result = await createShirt(parsed)
+			expect(mockDb.insertOne).toHaveBeenCalledWith(parsed)
+			expect(result.acknowledged).toBe(true)
+		})
 
-		expect(mockDb.insertOne).toHaveBeenCalledOnce()
-		expect(result).toHaveProperty('acknowledged', true)
+		it('should throw an error if database insertion fails', async () => {
+			mockDb.insertOne.mockRejectedValue(new Error('Database error'))
+			const parsed = ShirtSchema.parse(shirtData)
+
+			await expect(createShirt(parsed)).rejects.toThrow('Database error')
+		})
 	})
 
-	it('should return a shirt by name', async () => {
-		const shirtName = 'T-Shirt X'
-		const shirtFromDb = {
-			name: shirtName,
-			brand: 'Brand X',
-			size: 'M',
-			price: 50,
-			stock: 10,
-			color: 'Red',
-			category: 'Casual',
-			material: 'Cotton',
-			gender: 'Unisex',
-		}
+	describe('getShirtByName', () => {
+		it('should return a shirt if found by name', async () => {
+			mockDb.findOne.mockResolvedValue(shirtData)
+			const result = await getShirtByName(shirtData.name)
 
-		mockDb.findOne.mockResolvedValue(shirtFromDb)
+			expect(mockDb.findOne).toHaveBeenCalledWith({ name: shirtData.name })
+			expect(result).toEqual(shirtData)
+		})
 
-		const result = await getShirtByName(shirtName)
+		it('should return null if no shirt is found by name', async () => {
+			mockDb.findOne.mockResolvedValue(null)
+			const result = await getShirtByName('non-existent-shirt')
 
-		expect(mockDb.findOne).toHaveBeenCalledOnce()
-		expect(result).toEqual(shirtFromDb)
+			expect(mockDb.findOne).toHaveBeenCalledWith({ name: 'non-existent-shirt' })
+			expect(result).toBeNull()
+		})
 	})
-})
 
-describe('Fail cases', () => {
-	// it('Shout trhow an error', async () => {
-	// })
+	describe('getShirtById', () => {
+		it('should return a shirt if found by ID', async () => {
+			const id = new ObjectId()
+			mockDb.findOne.mockResolvedValue({ ...shirtData, _id: id })
+			const result = await getShirtById(id.toHexString())
+
+			expect(mockDb.findOne).toHaveBeenCalledWith({ _id: id })
+			expect(result).toEqual({ ...shirtData, _id: id })
+		})
+
+		it('should return null if no shirt is found by ID', async () => {
+			const id = new ObjectId()
+			mockDb.findOne.mockResolvedValue(null)
+			const result = await getShirtById(id.toHexString())
+
+			expect(mockDb.findOne).toHaveBeenCalledWith({ _id: id })
+			expect(result).toBeNull()
+		})
+	})
+
+	describe('updateShirt', () => {
+		it('should update a shirt successfully', async () => {
+			mockDb.updateOne.mockResolvedValue({
+				acknowledged: true,
+				modifiedCount: 1,
+				upsertedId: null,
+				upsertedCount: 0,
+				matchedCount: 1,
+			})
+			const { name, ...rest } = shirtData
+			const result = await updateShirt(shirtData)
+
+			expect(mockDb.updateOne).toHaveBeenCalledWith({ name }, { $set: rest })
+			expect(result.modifiedCount).toBe(1)
+		})
+
+		it('should throw an error if database update fails', async () => {
+			mockDb.updateOne.mockRejectedValue(new Error('Database error'))
+
+			await expect(updateShirt(shirtData)).rejects.toThrow('Database error')
+		})
+	})
 })
