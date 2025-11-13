@@ -4,7 +4,8 @@ import { getCartByUser, saveCart } from '@/repositories/cart.repository'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { ObjectId } from 'mongodb'
 import type { UpdateResult } from 'mongodb'
-import * as CartSchemaModule from '@/types/Schemas/cart.schema' // Importar o módulo inteiro
+import * as CartSchemaModule from '@/types/Schemas/cart.schema'
+import { ZodError } from 'zod'
 
 vi.mock('@/repositories/shirt.repository', () => ({
 	getShirtById: vi.fn(),
@@ -20,14 +21,13 @@ vi.mock('@/config/database', () => ({
 	getDatabase: vi.fn(),
 }))
 
-// Mock do módulo CartSchema
 vi.mock('@/types/Schemas/cart.schema', async (importOriginal) => {
 	const actual = await importOriginal<typeof CartSchemaModule>()
 	return {
 		...actual,
 		CartSchema: {
 			...actual.CartSchema,
-			safeParse: vi.fn(), // Mockar apenas safeParse
+			safeParse: vi.fn(),
 		},
 	}
 })
@@ -70,10 +70,10 @@ describe('CartService', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks()
-		// Resetar o mock de safeParse para o comportamento padrão (sucesso)
+
 		vi.mocked(CartSchemaModule.CartSchema.safeParse).mockReturnValue({
 			success: true,
-			data: createMockCart(), // Retornar um carrinho válido por padrão
+			data: createMockCart(),
 		})
 	})
 
@@ -152,16 +152,16 @@ describe('CartService', () => {
 
 			vi.mocked(getCartByUser).mockResolvedValue(null)
 			vi.mocked(getShirtById).mockResolvedValue(shirt)
-			// Forçar a falha do safeParse
+
 			vi.mocked(CartSchemaModule.CartSchema.safeParse).mockReturnValue({
 				success: false,
-				error: new Error('Zod validation failed') as any, // Mockar um erro Zod
+				error: new ZodError([]) as any,
 			})
 
 			await expect(cartService.addItem(userId, newItem)).rejects.toThrow(
 				'Invalid cart data',
 			)
-			expect(saveCart).not.toHaveBeenCalled() // Não deve salvar se a validação falhar
+			expect(saveCart).not.toHaveBeenCalled()
 		})
 	})
 
@@ -232,15 +232,14 @@ describe('CartService', () => {
 			const itemToRemove = { shirtId: shirtId.toString(), quantity: 1 }
 
 			vi.mocked(getCartByUser).mockResolvedValue(existingCart)
-			// Forçar a falha do safeParse
 			vi.mocked(CartSchemaModule.CartSchema.safeParse).mockReturnValue({
 				success: false,
-				error: new Error('Zod validation failed') as any,
+				error: new ZodError([]) as any,
 			})
 
-			await expect(cartService.removeItem(userId, itemToRemove)).rejects.toThrow(
-				'Invalid cart data',
-			)
+			await expect(
+				cartService.removeItem(userId, itemToRemove),
+			).rejects.toThrow('Invalid cart data')
 			expect(saveCart).not.toHaveBeenCalled()
 		})
 	})
