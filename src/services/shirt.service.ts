@@ -1,9 +1,12 @@
+import { z } from 'zod'
 import { ShirtSchema } from '@/types/Schemas/shirt.schema'
 import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
 import {
 	getShirtByName,
 	createShirt,
 	updateShirt,
+	getShirts,
+    getShirtById,
 } from '@/repositories/shirt.repository'
 
 export class ShirtService {
@@ -12,6 +15,26 @@ export class ShirtService {
 		if (!shirt) return null
 
 		const parsed = ShirtSchema.safeParse(shirt)
+		if (!parsed.success) throw new Error('Invalid data in the database.')
+
+		return parsed.data
+	}
+	
+	async findShirtById(id: string) {
+  	const shirt = await getShirtById(id)
+  	if (!shirt) return null
+  
+  	const parsed = ShirtSchema.safeParse(shirt)
+  	if (!parsed.success) throw new Error('Invalid data in the database.')
+  
+  	return parsed.data
+	}
+
+	async findShirts() {
+		const shirts = await getShirts()
+		if (!shirts) return null
+
+		const parsed = z.array(ShirtSchema).safeParse(shirts)
 		if (!parsed.success) throw new Error('Invalid data in the database.')
 
 		return parsed.data

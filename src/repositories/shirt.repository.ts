@@ -8,6 +8,12 @@ export const getShirtByName = async (name: string) => {
 	return await db_shirts.findOne({ name: name })
 }
 
+export const getShirts = async () => {
+	const db_shirts = await shirtCollection()
+
+	return await db_shirts.find().toArray()
+}
+
 export const getShirtById = async (shirtId: string) => {
 	const db_shirts = await shirtCollection()
 

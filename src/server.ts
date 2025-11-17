@@ -32,9 +32,18 @@ app.register(fastifyJwt, {
 app.register(fastifySwagger, {
 	openapi: {
 		info: {
-			title: 'Webhook Inspector API',
-			description: 'API for capturing adn inspecting webhook requests',
+			title: 'E-Commerce API',
+			description: 'API for an e-commerce platform',
 			version: '1.0.0',
+		},
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: 'http',
+					scheme: 'bearer',
+					bearerFormat: 'JWT',
+				},
+			},
 		},
 	},
 	transform: jsonSchemaTransform,

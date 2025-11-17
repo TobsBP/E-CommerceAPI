@@ -6,6 +6,7 @@ import {
 	removeItemController,
 } from '@/controllers/cart.controller'
 import { AddToCartSchema, CartSchema } from '@/types/Schemas/cart.schema'
+import { ErrorSchema } from '@/types/Schemas/error.schema'
 import { z } from 'zod'
 
 export async function cartRoute(server: FastifyInstance) {
@@ -17,10 +18,11 @@ export async function cartRoute(server: FastifyInstance) {
 				body: AddToCartSchema,
 				response: {
 					200: CartSchema,
-					404: z.object({ message: z.unknown() }),
-					500: z.object({ message: z.unknown() }),
+					404: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Cart'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		addItemController,
@@ -34,10 +36,11 @@ export async function cartRoute(server: FastifyInstance) {
 				body: AddToCartSchema,
 				response: {
 					200: z.object({ message: z.boolean() }),
-					404: z.object({ message: z.unknown() }),
-					500: z.object({ message: z.unknown() }),
+					404: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Cart'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		removeItemController,
@@ -50,10 +53,11 @@ export async function cartRoute(server: FastifyInstance) {
 			schema: {
 				response: {
 					200: CartSchema,
-					404: z.object({ message: z.unknown() }),
-					500: z.object({ message: z.unknown() }),
+					404: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Cart'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		getItemController,
