@@ -32,6 +32,7 @@ export async function shirtRoute(server: FastifyInstance) {
 	server.get(
 		'/shirts',
 		{
+		  preHandler: authenticate,
 			schema: {
 				response: {
 					200: z.array(ShirtSchema),
@@ -39,6 +40,7 @@ export async function shirtRoute(server: FastifyInstance) {
 					500: ErrorSchema,
 				},
 				tags: ['Shirt'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		getAllShirtsController,
