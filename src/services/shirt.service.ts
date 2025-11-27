@@ -6,7 +6,7 @@ import {
 	createShirt,
 	updateShirt,
 	getShirts,
-    getShirtById,
+	getShirtById,
 } from '@/repositories/shirt.repository'
 
 export class ShirtService {
@@ -19,15 +19,15 @@ export class ShirtService {
 
 		return parsed.data
 	}
-	
+
 	async findShirtById(id: string) {
-  	const shirt = await getShirtById(id)
-  	if (!shirt) return null
-  
-  	const parsed = ShirtSchema.safeParse(shirt)
-  	if (!parsed.success) throw new Error('Invalid data in the database.')
-  
-  	return parsed.data
+		const shirt = await getShirtById(id)
+		if (!shirt) return null
+
+		const parsed = ShirtSchema.safeParse(shirt)
+		if (!parsed.success) throw new Error('Invalid data in the database.')
+
+		return parsed.data
 	}
 
 	async findShirts() {

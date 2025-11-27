@@ -25,13 +25,16 @@ beforeEach(() => {
 const shirtData = {
 	name: 'T-Shirt X',
 	brand: 'Brand Y',
-	size: 'M',
+	sizes: ['M', 'L'],
 	price: 49.99,
 	stock: 10,
-	color: 'Black',
+	colors: ['Black', 'White'],
 	category: 'Casual',
-	material: 'Cotton',
-	gender: 'Unisex',
+	image: 'http://example.com/image.jpg',
+	rating: 4.5,
+	reviews: 10,
+	description: 'A cool shirt',
+	features: ['Cotton', 'Unisex'],
 }
 
 describe('shirt.repository', () => {

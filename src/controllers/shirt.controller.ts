@@ -10,7 +10,7 @@ export async function getShirtController(
 	reply: FastifyReply,
 ) {
 	try {
-		const { name } = request.params as IShirtRequestParams
+		  const { name } = request.params as IShirtRequestParams
 
 		const shirt = await shirtService.findShirt(name)
 

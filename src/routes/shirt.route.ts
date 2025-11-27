@@ -1,5 +1,4 @@
 import {
-	getShirtController,
 	createShirtController,
 	updateShirtController,
 	getAllShirtsController,
@@ -32,7 +31,7 @@ export async function shirtRoute(server: FastifyInstance) {
 	server.get(
 		'/shirts',
 		{
-		  preHandler: authenticate,
+			preHandler: authenticate,
 			schema: {
 				response: {
 					200: z.array(ShirtSchema),

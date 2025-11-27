@@ -5,6 +5,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { ObjectId } from 'mongodb'
 import type { UpdateResult } from 'mongodb'
 import * as CartSchemaModule from '@/types/Schemas/cart.schema'
+import type { Cart } from '@/types/Schemas/cart.schema'
 import { ZodError } from 'zod'
 
 vi.mock('@/repositories/shirt.repository', () => ({
@@ -42,13 +43,16 @@ describe('CartService', () => {
 		_id: shirtId,
 		name: 'T-Shirt',
 		brand: 'Brand',
-		size: 'M',
+		sizes: ['M', 'L'],
 		price: 100,
 		stock: 10,
-		color: 'Black',
+		colors: ['Black'],
 		category: 'Casual',
-		material: 'Cotton',
-		gender: 'Unisex',
+		image: 'http://example.com/image.jpg',
+		rating: 4.5,
+		reviews: 10,
+		description: 'A cool shirt',
+		features: ['Cotton', 'Unisex'],
 	}
 
 	const createUpdateResult = (overrides = {}): UpdateResult => ({
@@ -155,7 +159,7 @@ describe('CartService', () => {
 
 			vi.mocked(CartSchemaModule.CartSchema.safeParse).mockReturnValue({
 				success: false,
-				error: new ZodError([]) as any,
+				error: new ZodError([]) as unknown as ZodError<Cart>,
 			})
 
 			await expect(cartService.addItem(userId, newItem)).rejects.toThrow(
@@ -234,7 +238,7 @@ describe('CartService', () => {
 			vi.mocked(getCartByUser).mockResolvedValue(existingCart)
 			vi.mocked(CartSchemaModule.CartSchema.safeParse).mockReturnValue({
 				success: false,
-				error: new ZodError([]) as any,
+				error: new ZodError([]) as unknown as ZodError<Cart>,
 			})
 
 			await expect(
