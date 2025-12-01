@@ -43,7 +43,13 @@ export class CartService {
 		const cart = await this.getUserCart(userId)
 		const existing = cart.items.find((i) => i.shirtId === item.shirtId)
 
-		if (!existing) throw new Error('Item not in cart')
+		if (!existing) {
+			throw new Error('Item not in cart')
+		}
+
+		if (item.quantity > existing.quantity) {
+			throw new Error('Cannot remove more items than are in the cart')
+		}
 
 		existing.quantity -= item.quantity
 
@@ -54,7 +60,9 @@ export class CartService {
 		cart.total = cart.items.reduce((acc, i) => acc + i.price * i.quantity, 0)
 
 		const parsed = CartSchema.safeParse(cart)
-		if (!parsed.success) throw new Error('Invalid cart data')
+		if (!parsed.success) {
+			throw new Error('Invalid cart data')
+		}
 
 		await saveCart(parsed.data)
 		return true

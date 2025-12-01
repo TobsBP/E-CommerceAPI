@@ -26,10 +26,8 @@ export const createShirt = async (shirt: Shirt) => {
 	return await db_shirts.insertOne(shirt)
 }
 
-export const updateShirt = async (shirt: Shirt) => {
+export const updateShirt = async (id: string, data: Partial<Shirt>) => {
 	const db_shirts = await shirtCollection()
 
-	const { name, ...rest } = shirt
-
-	return await db_shirts.updateOne({ name: name }, { $set: rest })
+	return await db_shirts.updateOne({ _id: new ObjectId(id) }, { $set: data })
 }

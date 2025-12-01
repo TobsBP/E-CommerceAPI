@@ -33,7 +33,7 @@ export async function getShirtByIdController(
 	try {
 		const { id } = request.params as IShirtRequestParams
 
-		const shirt = await shirtService.findShirt(id)
+		const shirt = await shirtService.findShirtById(id)
 
 		if (!shirt) {
 			return reply.status(404).send({ message: 'Shirt not found' })
@@ -84,7 +84,11 @@ export async function updateShirtController(
 	reply: FastifyReply,
 ) {
 	try {
-		const response = await shirtService.editShirt(request.body as ShirtParams)
+		const { id } = request.params as IShirtRequestParams
+		const response = await shirtService.editShirt(
+			id,
+			request.body as ShirtParams,
+		)
 		reply.status(201).send(response)
 	} catch (error) {
 		request.log.error(error)

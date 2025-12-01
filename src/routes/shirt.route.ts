@@ -16,6 +16,9 @@ export async function shirtRoute(server: FastifyInstance) {
 		{
 			preHandler: authenticate,
 			schema: {
+				params: z.object({
+					id: z.string(),
+				}),
 				response: {
 					200: ShirtSchema,
 					404: ErrorSchema,
@@ -68,6 +71,9 @@ export async function shirtRoute(server: FastifyInstance) {
 		{
 			preHandler: authenticate,
 			schema: {
+				params: z.object({
+					id: z.string(),
+				}),
 				body: UpdateShirtSchema,
 				response: {
 					201: z.object({ message: z.string() }),

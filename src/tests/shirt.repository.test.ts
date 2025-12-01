@@ -101,6 +101,7 @@ describe('shirt.repository', () => {
 
 	describe('updateShirt', () => {
 		it('should update a shirt successfully', async () => {
+			const id = new ObjectId()
 			mockDb.updateOne.mockResolvedValue({
 				acknowledged: true,
 				modifiedCount: 1,
@@ -108,17 +109,22 @@ describe('shirt.repository', () => {
 				upsertedCount: 0,
 				matchedCount: 1,
 			})
-			const { name, ...rest } = shirtData
-			const result = await updateShirt(shirtData)
+			const result = await updateShirt(id.toHexString(), shirtData)
 
-			expect(mockDb.updateOne).toHaveBeenCalledWith({ name }, { $set: rest })
+			expect(mockDb.updateOne).toHaveBeenCalledWith(
+				{ _id: id },
+				{ $set: shirtData },
+			)
 			expect(result.modifiedCount).toBe(1)
 		})
 
 		it('should throw an error if database update fails', async () => {
+			const id = new ObjectId()
 			mockDb.updateOne.mockRejectedValue(new Error('Database error'))
 
-			await expect(updateShirt(shirtData)).rejects.toThrow('Database error')
+			await expect(updateShirt(id.toHexString(), shirtData)).rejects.toThrow(
+				'Database error',
+			)
 		})
 	})
 })

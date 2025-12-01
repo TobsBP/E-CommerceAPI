@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 export async function cartRoute(server: FastifyInstance) {
 	server.post(
-		'/cart/add',
+		'/cart',
 		{
 			preHandler: authenticate,
 			schema: {
@@ -28,14 +28,14 @@ export async function cartRoute(server: FastifyInstance) {
 		addItemController,
 	)
 
-	server.post(
-		'/cart/remove',
+	server.delete(
+		'/cart',
 		{
 			preHandler: authenticate,
 			schema: {
 				body: AddToCartSchema,
 				response: {
-					200: z.object({ message: z.boolean() }),
+					200: z.object({ message: z.string() }),
 					404: ErrorSchema,
 					500: ErrorSchema,
 				},

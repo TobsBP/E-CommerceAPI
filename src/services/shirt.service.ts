@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { ShirtSchema, UpdateShirtSchema } from '@/types/Schemas/shirt.schema'
 import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
 import {
 	getShirtByName,
@@ -48,11 +48,11 @@ export class ShirtService {
 		return { message: 'Shirt added!!' }
 	}
 
-	async editShirt(shirtData: ShirtParams) {
-		const parsed = ShirtSchema.safeParse(shirtData)
+	async editShirt(id: string, shirtData: ShirtParams) {
+		const parsed = UpdateShirtSchema.safeParse(shirtData)
 		if (!parsed.success) throw new Error('Invalid data sent.')
 
-		await updateShirt(parsed.data)
+		await updateShirt(id, parsed.data)
 		return { message: 'Shirt edited' }
 	}
 }

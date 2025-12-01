@@ -20,10 +20,21 @@ export const removeItemController = async (
 	reply: FastifyReply,
 ) => {
 	const { userId } = request.user as UserParams
-	const newItem = request.body as AddToCart
-	const result = await cartService.removeItem(userId, newItem)
+	const itemToRemove = request.body as AddToCart
 
-	return reply.status(200).send({ message: result })
+	try {
+		await cartService.removeItem(userId, itemToRemove)
+		return reply
+			.status(200)
+			.send({ message: 'Item removed from cart successfully.' })
+	} catch (error) {
+		return reply.status(404).send({
+			message:
+				error instanceof Error
+					? error.message
+					: 'Item not found in cart or quantity exceeds current amount.',
+		})
+	}
 }
 
 export const getItemController = async (
