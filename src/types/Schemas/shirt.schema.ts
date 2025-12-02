@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const ShirtSchema = z.object({
+	id: z.string().optional(),
 	name: z.string(),
 	brand: z.string(),
 	price: z.number(),
