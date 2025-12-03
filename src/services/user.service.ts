@@ -13,9 +13,8 @@ export class UserService {
 		const users = await getUsers()
 		if (!users) return []
 
-		// We might want to exclude passwords from the result
 		return users.map((u) => {
-			const { ...userWithoutPassword } = u
+			const { password, ...userWithoutPassword } = u
 			return { ...userWithoutPassword, id: u._id.toString() }
 		})
 	}
@@ -24,7 +23,7 @@ export class UserService {
 		const user = await getUserById(id)
 		if (!user) return null
 
-		const { ...userWithoutPassword } = user
+		const { password, ...userWithoutPassword } = user
 		return { ...userWithoutPassword, id: user._id.toString() }
 	}
 

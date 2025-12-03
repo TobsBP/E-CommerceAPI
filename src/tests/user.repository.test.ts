@@ -25,6 +25,7 @@ beforeEach(() => {
 })
 
 const userData = {
+	name: 'Test User',
 	email: 'test@example.com',
 	password: 'password123',
 	role: 'User',
