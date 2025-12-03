@@ -1,6 +1,5 @@
-import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { UserSchema, UpdateUserSchema } from '@/types/Schemas/user.schema'
+import { UpdateUserSchema } from '@/types/Schemas/user.schema'
 import type { UserParams } from '@/types/Interfaces/IUserParams'
 import {
 	getUserById,
@@ -16,7 +15,7 @@ export class UserService {
 
 		// We might want to exclude passwords from the result
 		return users.map((u) => {
-			const { password, ...userWithoutPassword } = u
+			const { ...userWithoutPassword } = u
 			return { ...userWithoutPassword, id: u._id.toString() }
 		})
 	}
@@ -25,7 +24,7 @@ export class UserService {
 		const user = await getUserById(id)
 		if (!user) return null
 
-		const { password, ...userWithoutPassword } = user
+		const { ...userWithoutPassword } = user
 		return { ...userWithoutPassword, id: user._id.toString() }
 	}
 

@@ -44,7 +44,5 @@ export const getItemController = async (
 	const { userId } = request.user as UserParams
 	const result = await cartService.getUserCart(userId)
 
-	console.log(result)
-
 	return reply.status(200).send(result)
 }
