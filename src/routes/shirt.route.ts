@@ -1,28 +1,51 @@
 import {
-	getShirtController,
 	createShirtController,
 	updateShirtController,
+	getAllShirtsController,
+	getShirtByIdController,
 } from '../controllers/shirt.controller'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { ShirtSchema, UpdateShirtSchema } from '@/types/Schemas/shirt.schema'
 import { authenticate } from '@/middleware/auth'
+import { ErrorSchema } from '@/types/Schemas/error.schema'
 
 export async function shirtRoute(server: FastifyInstance) {
 	server.get(
-		'/shirt/:name',
+		'/shirt/:id',
+		{
+			preHandler: authenticate,
+			schema: {
+				params: z.object({
+					id: z.string(),
+				}),
+				response: {
+					200: ShirtSchema,
+					404: ErrorSchema,
+					500: ErrorSchema,
+				},
+				tags: ['Shirt'],
+				security: [{ bearerAuth: [] }],
+			},
+		},
+		getShirtByIdController,
+	)
+
+	server.get(
+		'/shirts',
 		{
 			preHandler: authenticate,
 			schema: {
 				response: {
-					200: ShirtSchema,
-					404: z.object({ message: z.string() }),
-					500: z.object({ message: z.string() }),
+					200: z.array(ShirtSchema),
+					404: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Shirt'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
-		getShirtController,
+		getAllShirtsController,
 	)
 
 	server.post(
@@ -33,27 +56,32 @@ export async function shirtRoute(server: FastifyInstance) {
 				body: ShirtSchema,
 				response: {
 					201: z.object({ message: z.string() }),
-					400: z.object({ message: z.string() }),
-					500: z.object({ message: z.string() }),
+					400: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Shirt'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		createShirtController,
 	)
 
 	server.put(
-		'/shirt/:name',
+		'/shirt/:id',
 		{
 			preHandler: authenticate,
 			schema: {
+				params: z.object({
+					id: z.string(),
+				}),
 				body: UpdateShirtSchema,
 				response: {
 					201: z.object({ message: z.string() }),
-					400: z.object({ message: z.string() }),
-					500: z.object({ message: z.string() }),
+					400: ErrorSchema,
+					500: ErrorSchema,
 				},
 				tags: ['Shirt'],
+				security: [{ bearerAuth: [] }],
 			},
 		},
 		updateShirtController,

@@ -8,7 +8,8 @@
 		"dev": "tsx watch --env-file=.env src/server.ts",
 		"start": "node dist/server.js",
 		"test": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"prepare": "husky"
 	},
 	"keywords": [],
 	"author": "",
@@ -30,7 +31,13 @@
 		"bcryptjs": "^3.0.3",
 		"fastify": "^5.6.2",
 		"fastify-type-provider-zod": "^6.1.0",
+		"husky": "^9.1.7",
 		"mongodb": "^7.0.0",
 		"zod": "^4.1.12"
+	},
+	"lint-staged": {
+		"*.{js,ts,jsx,tsx}": [
+			"biome check . --write"
+		]
 	}
 }

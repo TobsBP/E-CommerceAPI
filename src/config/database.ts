@@ -2,12 +2,14 @@ import type { Collection } from 'mongodb'
 import { MongoClient } from 'mongodb'
 import type { UserParams } from '@/types/Interfaces/IUserParams'
 import type { Shirt } from '@/types/Schemas/shirt.schema'
+import type { Cart } from '@/types/Schemas/cart.schema'
 
 const MONGO_URL = process.env.MONGO_URL as string
 const client = new MongoClient(MONGO_URL)
 
 let db_users: Collection<UserParams> | null = null
 let db_shirts: Collection<Shirt> | null = null
+let db_carts: Collection<Cart> | null = null
 
 export async function userCollection(): Promise<Collection<UserParams>> {
 	if (!db_users) {
@@ -35,4 +37,18 @@ export async function shirtCollection(): Promise<Collection<Shirt>> {
 		}
 	}
 	return db_shirts
+}
+
+export async function cartCollection(): Promise<Collection<Cart>> {
+	if (!db_carts) {
+		try {
+			await client.connect()
+			const db = client.db('Items')
+			db_carts = db.collection<Cart>('carts')
+		} catch (error) {
+			console.error('Erro in connection with MongoDB:', error)
+			throw error
+		}
+	}
+	return db_carts
 }

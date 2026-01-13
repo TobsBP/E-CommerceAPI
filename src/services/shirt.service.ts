@@ -1,17 +1,42 @@
-import { ShirtSchema } from '@/types/Schemas/shirt.schema'
+import { z } from 'zod'
+import { ShirtSchema, UpdateShirtSchema } from '@/types/Schemas/shirt.schema'
 import type { ShirtParams } from '@/types/Interfaces/IShirtParams'
 import {
-	getShirts,
+	getShirtByName,
 	createShirt,
 	updateShirt,
+	getShirts,
+	getShirtById,
 } from '@/repositories/shirt.repository'
 
 export class ShirtService {
 	async findShirt(name: string) {
-		const shirt = await getShirts(name)
+		const shirt = await getShirtByName(name)
 		if (!shirt) return null
 
-		const parsed = ShirtSchema.safeParse(shirt)
+		const parsed = ShirtSchema.safeParse({ ...shirt, id: shirt._id.toString() })
+		if (!parsed.success) throw new Error('Invalid data in the database.')
+
+		return parsed.data
+	}
+
+	async findShirtById(id: string) {
+		const shirt = await getShirtById(id)
+		if (!shirt) return null
+
+		const parsed = ShirtSchema.safeParse({ ...shirt, id: shirt._id.toString() })
+		if (!parsed.success) throw new Error('Invalid data in the database.')
+
+		return parsed.data
+	}
+
+	async findShirts() {
+		const shirts = await getShirts()
+		if (!shirts) return null
+
+		const parsed = z
+			.array(ShirtSchema)
+			.safeParse(shirts.map((s) => ({ ...s, id: s._id.toString() })))
 		if (!parsed.success) throw new Error('Invalid data in the database.')
 
 		return parsed.data
@@ -25,11 +50,11 @@ export class ShirtService {
 		return { message: 'Shirt added!!' }
 	}
 
-	async editShirt(shirtData: ShirtParams) {
-		const parsed = ShirtSchema.safeParse(shirtData)
+	async editShirt(id: string, shirtData: ShirtParams) {
+		const parsed = UpdateShirtSchema.safeParse(shirtData)
 		if (!parsed.success) throw new Error('Invalid data sent.')
 
-		await updateShirt(parsed.data)
+		await updateShirt(id, parsed.data)
 		return { message: 'Shirt edited' }
 	}
 }
